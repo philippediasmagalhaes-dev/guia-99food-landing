@@ -42,6 +42,7 @@
     --page-max-width: 1180px;
     --ease-quick: ease;
     --duration-quick: 0.2s;
+    --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
     color-scheme: dark;
   }
 
@@ -54,6 +55,7 @@
     font-family: var(--font-body);
     font-weight: 400;
     -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
   }
 
   .container { max-width: var(--page-max-width); margin: 0 auto; padding: 0 24px; }
@@ -104,14 +106,16 @@
     color: #1a1300;
     box-shadow: var(--shadow-gold);
   }
-  .btn-primary:hover { background: var(--gold-soft); transform: translateY(-1px); }
+  @media (hover: hover) and (pointer: fine) {
+    .btn-primary:hover { background: var(--gold-soft); transform: translateY(-1px); }
+    .btn-nav:hover { background: var(--gold-soft); }
+  }
   .btn-nav {
     background: var(--gold);
     color: #1a1300;
     padding: 10px 18px;
     font-size: 14px;
   }
-  .btn-nav:hover { background: var(--gold-soft); }
 
   /* ---------- Pills / labels ---------- */
   .pill {
@@ -412,6 +416,16 @@
 
   svg.arrow { width: 15px; height: 15px; flex-shrink: 0; }
 
+  /* ---------- SVG draw-in icons (stroke animation, normalized via pathLength) ---------- */
+  .icon-draw path, .icon-draw circle, .icon-draw line, .icon-draw polyline, .icon-draw rect {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    transition: stroke-dashoffset 0.7s var(--ease-out);
+  }
+  .icon-draw.in path, .icon-draw.in circle, .icon-draw.in line, .icon-draw.in polyline, .icon-draw.in rect {
+    stroke-dashoffset: 0;
+  }
+
   /* ---------- Sticky mobile CTA ---------- */
   .sticky-cta {
     display: none;
@@ -421,7 +435,10 @@
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
     border-top: 1px solid rgba(242,183,5,0.25);
+    transform: translateY(120%);
+    transition: transform 0.4s var(--ease-out);
   }
+  .sticky-cta.show { transform: translateY(0); }
   .sticky-cta .btn { width: 100%; justify-content: center; }
 
   @media (max-width: 860px) {
@@ -439,6 +456,15 @@
     body { padding-bottom: 76px; }
     .sticky-cta { display: block; }
   }
+
+  /* ---------- Reduced motion: keep opacity fades, drop movement & drawing ---------- */
+  @media (prefers-reduced-motion: reduce) {
+    .icon-draw path, .icon-draw circle, .icon-draw line, .icon-draw polyline, .icon-draw rect {
+      transition: none;
+      stroke-dashoffset: 0;
+    }
+    .sticky-cta { transition: none; }
+  }
 </style>
 </head>
 <body>
@@ -453,26 +479,26 @@
 <header class="hero">
   <div class="container hero-grid">
     <div>
-      <span class="pill">Guia prático · Para donos de restaurante e delivery</span>
-      <h1 class="display">Pare de <em>perder margem</em> vendendo no 99Food</h1>
-      <p class="subhead">O passo a passo pra calcular seu preço certo, montar combos e usar desconto sem furar o lucro — testado no delivery de verdade da Feijoada da Li, pedido a pedido.</p>
+      <span class="pill" data-reveal="down">Guia prático · Para donos de restaurante e delivery</span>
+      <h1 class="display" data-reveal="up">Pare de <em>perder margem</em> vendendo no 99Food</h1>
+      <p class="subhead" data-reveal="left">O passo a passo pra calcular seu preço certo, montar combos e usar desconto sem furar o lucro — testado no delivery de verdade da Feijoada da Li, pedido a pedido.</p>
       <div class="cta-row">
-        <a href="https://pay.hotmart.com/I107341440K?checkoutMode=10" class="btn btn-primary" target="_blank" rel="noopener">
+        <a href="https://pay.hotmart.com/I107341440K?checkoutMode=10" class="btn btn-primary" target="_blank" rel="noopener" data-reveal="pop">
           Quero o guia — R$ 19,90
           <svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
         </a>
       </div>
-      <span class="price-line">10 páginas · PDF · <strong>acesso imediato após o pagamento</strong></span>
+      <span class="price-line" data-reveal="up">10 páginas · PDF · <strong>acesso imediato após o pagamento</strong></span>
 
       <div class="trust-row">
-        <span class="trust-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 3 6v6c0 5 3.8 8.4 9 10 5.2-1.6 9-5 9-10V6l-9-4Z"/><path d="m9 12 2 2 4-4"/></svg> Garantia de 7 dias</span>
-        <span class="trust-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg> Entrega por e-mail</span>
-        <span class="trust-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg> Checkout seguro Hotmart</span>
+        <span class="trust-item" data-reveal="left"><svg class="icon-draw" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path pathLength="1" d="M12 2 3 6v6c0 5 3.8 8.4 9 10 5.2-1.6 9-5 9-10V6l-9-4Z"/><path pathLength="1" d="m9 12 2 2 4-4"/></svg> Garantia de 7 dias</span>
+        <span class="trust-item" data-reveal="up"><svg class="icon-draw" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect pathLength="1" x="3" y="5" width="18" height="14" rx="2"/><path pathLength="1" d="m3 7 9 6 9-6"/></svg> Entrega por e-mail</span>
+        <span class="trust-item" data-reveal="right"><svg class="icon-draw" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect pathLength="1" x="4" y="10" width="16" height="10" rx="2"/><path pathLength="1" d="M8 10V7a4 4 0 0 1 8 0v3"/></svg> Checkout seguro Hotmart</span>
       </div>
     </div>
 
     <div class="cover-wrap">
-      <div class="cover">
+      <div class="cover" data-reveal="right">
         <span class="price-tag">R$ 19,90</span>
         <div class="eyebrow">
           <span>Guia prático</span>
@@ -489,9 +515,9 @@
 <section class="abyss">
   <div class="container">
     <div class="stats-grid">
-      <div class="stat-item"><div class="num">70+</div><div class="label">Cidades atendidas pela 99Food</div></div>
-      <div class="stat-item"><div class="num">0%</div><div class="label">De comissão por 24 meses</div></div>
-      <div class="stat-item"><div class="num">12–27%</div><div class="label">É o que o iFood cobra, pra comparar</div></div>
+      <div class="stat-item" data-reveal="left"><div class="num">70+</div><div class="label">Cidades atendidas pela 99Food</div></div>
+      <div class="stat-item" data-reveal="up"><div class="num">0%</div><div class="label">De comissão por 24 meses</div></div>
+      <div class="stat-item" data-reveal="right"><div class="num">12–27%</div><div class="label">É o que o iFood cobra, pra comparar</div></div>
     </div>
   </div>
 </section>
@@ -499,25 +525,25 @@
 <section>
   <div class="container">
     <div class="section-head">
-      <span class="mono-label">O problema</span>
-      <h2 class="heading">Sua margem pode estar <em>vazando</em> sem você perceber</h2>
-      <p>São detalhes da 99Food que, se você não souber calcular, transformam um mês de muitos pedidos em um mês sem lucro.</p>
+      <span class="mono-label" data-reveal="down">O problema</span>
+      <h2 class="heading" data-reveal="up">Sua margem pode estar <em>vazando</em> sem você perceber</h2>
+      <p data-reveal="up">São detalhes da 99Food que, se você não souber calcular, transformam um mês de muitos pedidos em um mês sem lucro.</p>
     </div>
     <div class="problem-grid">
-      <div class="problem-item">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      <div class="problem-item" data-reveal="left">
+        <svg class="icon-draw" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle pathLength="1" cx="12" cy="12" r="10"/><line pathLength="1" x1="12" y1="8" x2="12" y2="12"/><line pathLength="1" x1="12" y1="16" x2="12.01" y2="16"/></svg>
         <p>Cobrar preço diferente no app e no balcão derruba sua visibilidade na 99Food — é regra oficial, não boa prática opcional.</p>
       </div>
-      <div class="problem-item">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      <div class="problem-item" data-reveal="right">
+        <svg class="icon-draw" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle pathLength="1" cx="12" cy="12" r="10"/><line pathLength="1" x1="12" y1="8" x2="12" y2="12"/><line pathLength="1" x1="12" y1="16" x2="12.01" y2="16"/></svg>
         <p>O frete grátis obrigatório nos 2 primeiros pedidos de cada cliente novo sai do seu caixa se você não planejar.</p>
       </div>
-      <div class="problem-item">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      <div class="problem-item" data-reveal="left">
+        <svg class="icon-draw" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle pathLength="1" cx="12" cy="12" r="10"/><line pathLength="1" x1="12" y1="8" x2="12" y2="12"/><line pathLength="1" x1="12" y1="16" x2="12.01" y2="16"/></svg>
         <p>Depois dos 24 meses promocionais, a comissão pula pra até 14% — se seu preço não previu isso, a margem some.</p>
       </div>
-      <div class="problem-item">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      <div class="problem-item" data-reveal="right">
+        <svg class="icon-draw" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle pathLength="1" cx="12" cy="12" r="10"/><line pathLength="1" x1="12" y1="8" x2="12" y2="12"/><line pathLength="1" x1="12" y1="16" x2="12.01" y2="16"/></svg>
         <p>Dar desconto pra ganhar destaque no app sem recalcular a margem final: vende mais, lucra menos.</p>
       </div>
     </div>
@@ -527,27 +553,27 @@
 <section class="abyss">
   <div class="container">
     <div class="section-head">
-      <span class="mono-label">O que tem dentro</span>
-      <h2 class="heading">5 capítulos pra vender no 99Food sem perder margem</h2>
-      <p>Direto ao ponto, com fórmula, exemplo real e checklist — nada de teoria de curso.</p>
+      <span class="mono-label" data-reveal="down">O que tem dentro</span>
+      <h2 class="heading" data-reveal="up">5 capítulos pra vender no 99Food sem perder margem</h2>
+      <p data-reveal="up">Direto ao ponto, com fórmula, exemplo real e checklist — nada de teoria de curso.</p>
     </div>
     <div class="feature-grid">
-      <div class="card c1"><span class="num">01</span><h3>Como a 99Food funciona</h3><p>Estrutura de taxas, os 3 modelos de entrega e a regra de paridade que pode derrubar sua visibilidade no app.</p></div>
-      <div class="card c2"><span class="num">02</span><h3>Fórmula de precificação</h3><p>O cálculo certo do preço de venda, faixas de margem por tipo de negócio e um exemplo real, passo a passo.</p></div>
-      <div class="card c3"><span class="num">03</span><h3>Precificando combos</h3><p>Como montar combos com desconto real sem sacrificar a margem, usando bebida e sobremesa a seu favor.</p></div>
-      <div class="card c4"><span class="num">04</span><h3>Preço-base + desconto no app</h3><p>A estratégia de reajuste e desconto que aumenta sua visibilidade sem furar a regra de paridade de preço.</p></div>
-      <div class="card c5"><span class="num">05</span><h3>Erros comuns + plano de 14 dias</h3><p>Os erros que mais destroem margem no delivery e um cronograma prático pra implementar tudo.</p></div>
+      <div class="card c1" data-reveal="left"><span class="num">01</span><h3>Como a 99Food funciona</h3><p>Estrutura de taxas, os 3 modelos de entrega e a regra de paridade que pode derrubar sua visibilidade no app.</p></div>
+      <div class="card c2" data-reveal="down"><span class="num">02</span><h3>Fórmula de precificação</h3><p>O cálculo certo do preço de venda, faixas de margem por tipo de negócio e um exemplo real, passo a passo.</p></div>
+      <div class="card c3" data-reveal="right"><span class="num">03</span><h3>Precificando combos</h3><p>Como montar combos com desconto real sem sacrificar a margem, usando bebida e sobremesa a seu favor.</p></div>
+      <div class="card c4" data-reveal="up"><span class="num">04</span><h3>Preço-base + desconto no app</h3><p>A estratégia de reajuste e desconto que aumenta sua visibilidade sem furar a regra de paridade de preço.</p></div>
+      <div class="card c5" data-reveal="scale"><span class="num">05</span><h3>Erros comuns + plano de 14 dias</h3><p>Os erros que mais destroem margem no delivery e um cronograma prático pra implementar tudo.</p></div>
     </div>
   </div>
 </section>
 
 <section>
   <div class="container formula-block">
-    <span class="mono-label">A base de tudo</span>
-    <h2 class="heading" style="margin-top:14px;">A fórmula que substitui o "no olho"</h2>
-    <p class="formula-readout">Preço de venda <span class="op">=</span> Custo total <span class="op">÷</span> (1 <span class="op">−</span> Margem <span class="op">−</span> Impostos <span class="op">−</span> Comissão)</p>
+    <span class="mono-label" data-reveal="down">A base de tudo</span>
+    <h2 class="heading" style="margin-top:14px;" data-reveal="up">A fórmula que substitui o "no olho"</h2>
+    <p class="formula-readout" data-reveal="up">Preço de venda <span class="op">=</span> Custo total <span class="op">÷</span> (1 <span class="op">−</span> Margem <span class="op">−</span> Impostos <span class="op">−</span> Comissão)</p>
 
-    <div class="stat-card">
+    <div class="stat-card" data-reveal="scale">
       <span class="mono-label">Exemplo real · Porção de feijoada</span>
       <div class="example-rows">
         <div class="example-row"><span class="k">Custo total (CMV + embalagem + despesas)</span><span class="v">R$ 17,88</span></div>
@@ -561,22 +587,22 @@
 <section class="abyss">
   <div class="container">
     <div class="section-head">
-      <span class="mono-label">Pra quem é</span>
-      <h2 class="heading">Feito pra quem toca o delivery na prática</h2>
+      <span class="mono-label" data-reveal="down">Pra quem é</span>
+      <h2 class="heading" data-reveal="up">Feito pra quem toca o delivery na prática</h2>
     </div>
     <div class="audience-grid">
-      <div class="audience-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><p>Donos de restaurante, marmitaria ou delivery que já vendem no 99Food.</p></div>
-      <div class="audience-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><p>Quem tá pensando em entrar na plataforma e não quer errar o preço desde o início.</p></div>
-      <div class="audience-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><p>Quem monta combos e promoções no automático sem saber se ainda sobra margem.</p></div>
-      <div class="audience-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><p>Quem quer aproveitar os 24 meses de comissão 0% sem se enganar sobre o que vem depois.</p></div>
+      <div class="audience-item" data-reveal="right"><svg class="icon-draw" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline pathLength="1" points="20 6 9 17 4 12"/></svg><p>Donos de restaurante, marmitaria ou delivery que já vendem no 99Food.</p></div>
+      <div class="audience-item" data-reveal="left"><svg class="icon-draw" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline pathLength="1" points="20 6 9 17 4 12"/></svg><p>Quem tá pensando em entrar na plataforma e não quer errar o preço desde o início.</p></div>
+      <div class="audience-item" data-reveal="right"><svg class="icon-draw" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline pathLength="1" points="20 6 9 17 4 12"/></svg><p>Quem monta combos e promoções no automático sem saber se ainda sobra margem.</p></div>
+      <div class="audience-item" data-reveal="left"><svg class="icon-draw" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline pathLength="1" points="20 6 9 17 4 12"/></svg><p>Quem quer aproveitar os 24 meses de comissão 0% sem se enganar sobre o que vem depois.</p></div>
     </div>
   </div>
 </section>
 
 <section>
   <div class="container" style="text-align:center;">
-    <span class="mono-label">Quem escreveu</span>
-    <div class="author-card" style="margin-top:20px; text-align:left;">
+    <span class="mono-label" data-reveal="down">Quem escreveu</span>
+    <div class="author-card" style="margin-top:20px; text-align:left;" data-reveal="left">
       <p>Por Philippe — a Feijoada da Li roda no 99Food todo dia. Esse guia é a precificação que uso no meu próprio cardápio, ajustada na prática pedido a pedido, não teoria de curso de gestão.</p>
       <span class="sign">Feijoada da Li</span>
     </div>
@@ -585,8 +611,8 @@
 
 <section class="abyss">
   <div class="container">
-    <div class="guarantee">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 3 6v6c0 5 3.8 8.4 9 10 5.2-1.6 9-5 9-10V6l-9-4Z"/><path d="m9 12 2 2 4-4"/></svg>
+    <div class="guarantee" data-reveal="scale">
+      <svg class="icon-draw" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path pathLength="1" d="M12 2 3 6v6c0 5 3.8 8.4 9 10 5.2-1.6 9-5 9-10V6l-9-4Z"/><path pathLength="1" d="m9 12 2 2 4-4"/></svg>
       <div>
         <h3>Garantia incondicional de 7 dias</h3>
         <p>Se o guia não fizer sentido pro seu negócio, o reembolso é automático e sem burocracia, direto pela Hotmart.</p>
@@ -598,23 +624,23 @@
 <section>
   <div class="container">
     <div class="section-head">
-      <span class="mono-label">Perguntas frequentes</span>
-      <h2 class="heading">Antes de comprar</h2>
+      <span class="mono-label" data-reveal="down">Perguntas frequentes</span>
+      <h2 class="heading" data-reveal="up">Antes de comprar</h2>
     </div>
     <div class="faq-list">
-      <details class="faq-item">
+      <details class="faq-item" data-reveal="up">
         <summary>Serve pra qualquer tipo de restaurante ou só feijoada?<svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></summary>
         <p>A fórmula e a lógica de precificação valem pra qualquer delivery no 99Food. O exemplo numérico do guia é da Feijoada da Li, mas o cálculo é o mesmo pra marmitaria, hamburgueria, pizzaria ou qualquer outro tipo de cardápio.</p>
       </details>
-      <details class="faq-item">
+      <details class="faq-item" data-reveal="up">
         <summary>Eu ainda nem entrei no 99Food, o guia serve pra mim?<svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></summary>
         <p>Serve — inclusive é melhor aplicar antes de cadastrar seu cardápio, porque a plataforma exige que o preço do app seja igual ao do balcão desde o primeiro dia.</p>
       </details>
-      <details class="faq-item">
+      <details class="faq-item" data-reveal="up">
         <summary>Como recebo o material depois de comprar?<svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></summary>
         <p>A entrega é automática pela Hotmart. Assim que o pagamento é aprovado, o PDF chega no e-mail que você usou na compra.</p>
       </details>
-      <details class="faq-item">
+      <details class="faq-item" data-reveal="up">
         <summary>E se eu não gostar do conteúdo?<svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></summary>
         <p>Você tem 7 dias de garantia. É só pedir reembolso direto pela Hotmart, sem burocracia.</p>
       </details>
@@ -624,11 +650,11 @@
 
 <section class="abyss final-cta" id="cta">
   <div class="container">
-    <span class="pill">Pagamento único · Entrega automática</span>
-    <h2 class="display" style="margin-top:26px;">Garanta o guia e <em>precifique certo</em> ainda hoje</h2>
-    <p class="subhead">R$ 19,90 · PDF liberado assim que o pagamento é confirmado.</p>
+    <span class="pill" data-reveal="down">Pagamento único · Entrega automática</span>
+    <h2 class="display" style="margin-top:26px;" data-reveal="scale">Garanta o guia e <em>precifique certo</em> ainda hoje</h2>
+    <p class="subhead" data-reveal="up">R$ 19,90 · PDF liberado assim que o pagamento é confirmado.</p>
     <div class="cta-row">
-      <a href="https://pay.hotmart.com/I107341440K?checkoutMode=10" class="btn btn-primary" target="_blank" rel="noopener">
+      <a href="https://pay.hotmart.com/I107341440K?checkoutMode=10" class="btn btn-primary" target="_blank" rel="noopener" data-reveal="pop">
         Quero o guia — R$ 19,90
         <svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
       </a>
@@ -639,13 +665,99 @@
 
 <footer>
   <div class="container">
-    <span class="mono-label">Feijoada da Li · Guia por Philippe</span>
+    <span class="mono-label" data-reveal="up">Feijoada da Li · Guia por Philippe</span>
   </div>
 </footer>
 
 <div class="sticky-cta">
   <a href="https://pay.hotmart.com/I107341440K?checkoutMode=10" class="btn btn-primary" target="_blank" rel="noopener">Quero o guia — R$ 19,90</a>
 </div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script>
+(function () {
+  if (typeof gsap === 'undefined') return; // CDN blocked/offline: page stays fully visible, no animation
+  if (typeof ScrollTrigger !== 'undefined') gsap.registerPlugin(ScrollTrigger);
+
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var DIST = 28;
+  var OFFSETS = {
+    left:  { x: -DIST, y: 0 },
+    right: { x: DIST, y: 0 },
+    up:    { x: 0, y: DIST },
+    down:  { x: 0, y: -DIST },
+    scale: { x: 0, y: 14 },
+    pop:   { x: 0, y: 10 }
+  };
+
+  function fromVarsFor(dir) {
+    if (reduce) return { opacity: 0 };
+    var off = OFFSETS[dir] || OFFSETS.up;
+    var scaleFrom = (dir === 'scale' || dir === 'pop') ? 0.92 : 1;
+    return { opacity: 0, x: off.x, y: off.y, scale: scaleFrom };
+  }
+
+  function toVarsFor(dir, extra) {
+    var base = reduce
+      ? { opacity: 1, duration: 0.4, ease: 'power1.out' }
+      : { opacity: 1, x: 0, y: 0, scale: 1, duration: 0.7, ease: dir === 'pop' ? 'back.out(1.5)' : 'power3.out' };
+    return Object.assign({}, base, extra || {});
+  }
+
+  var allReveal = Array.prototype.slice.call(document.querySelectorAll('[data-reveal]'));
+  var heroEls = allReveal.filter(function (el) { return el.closest('.hero'); });
+  var scrollEls = allReveal.filter(function (el) { return !el.closest('.hero'); });
+
+  /* Hero: plays immediately on load (above the fold, not scroll-gated) */
+  var heroTl = gsap.timeline();
+  heroEls.forEach(function (el, i) {
+    var dir = el.getAttribute('data-reveal');
+    heroTl.fromTo(el, fromVarsFor(dir), toVarsFor(dir), i * 0.08);
+  });
+
+  /* Below-the-fold: reveal once when scrolled into view, staggered per sibling group */
+  var parentCounts = new Map();
+  scrollEls.forEach(function (el) {
+    var dir = el.getAttribute('data-reveal');
+    var parent = el.parentElement;
+    var idx = parentCounts.get(parent) || 0;
+    parentCounts.set(parent, idx + 1);
+    var delay = Math.min(idx * 0.08, 0.32);
+
+    if (typeof ScrollTrigger === 'undefined') {
+      gsap.fromTo(el, fromVarsFor(dir), toVarsFor(dir, { delay: delay }));
+      return;
+    }
+    gsap.fromTo(el, fromVarsFor(dir), toVarsFor(dir, {
+      delay: delay,
+      scrollTrigger: { trigger: el, start: 'top 88%', once: true }
+    }));
+  });
+
+  /* SVG + CSS draw-in icons, triggered on scroll via class toggle */
+  document.querySelectorAll('.icon-draw').forEach(function (svg) {
+    if (typeof ScrollTrigger === 'undefined') { svg.classList.add('in'); return; }
+    ScrollTrigger.create({
+      trigger: svg,
+      start: 'top 90%',
+      once: true,
+      onEnter: function () { svg.classList.add('in'); }
+    });
+  });
+
+  /* Sticky mobile CTA: slides up once the hero has scrolled past */
+  var stickyCta = document.querySelector('.sticky-cta');
+  if (stickyCta && typeof ScrollTrigger !== 'undefined') {
+    ScrollTrigger.create({
+      trigger: '.hero',
+      start: 'bottom top',
+      onEnter: function () { stickyCta.classList.add('show'); },
+      onLeaveBack: function () { stickyCta.classList.remove('show'); }
+    });
+  }
+})();
+</script>
 
 </body>
 </html>
