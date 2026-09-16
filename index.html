@@ -680,6 +680,10 @@
   if (typeof gsap === 'undefined') return; // CDN blocked/offline: page stays fully visible, no animation
   if (typeof ScrollTrigger !== 'undefined') gsap.registerPlugin(ScrollTrigger);
 
+  // Wait for full load (fonts/images) so ScrollTrigger measures final layout, not a pre-font-swap one
+  if (document.readyState === 'complete') { init(); } else { window.addEventListener('load', init); }
+
+  function init() {
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var DIST = 28;
   var OFFSETS = {
@@ -735,9 +739,13 @@
     }));
   });
 
-  /* SVG + CSS draw-in icons, triggered on scroll via class toggle */
+  /* SVG + CSS draw-in icons: above-the-fold ones draw immediately with the hero,
+     the rest draw in on scroll via class toggle */
   document.querySelectorAll('.icon-draw').forEach(function (svg) {
-    if (typeof ScrollTrigger === 'undefined') { svg.classList.add('in'); return; }
+    if (svg.closest('.hero') || typeof ScrollTrigger === 'undefined') {
+      svg.classList.add('in');
+      return;
+    }
     ScrollTrigger.create({
       trigger: svg,
       start: 'top 90%',
@@ -756,6 +764,9 @@
       onLeaveBack: function () { stickyCta.classList.remove('show'); }
     });
   }
+
+  if (typeof ScrollTrigger !== 'undefined') ScrollTrigger.refresh();
+  } // end init
 })();
 </script>
 
