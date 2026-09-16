@@ -217,19 +217,6 @@
     width: 100%;
     height: auto;
   }
-  .cover .price-tag {
-    position: absolute; top: 16px; left: -16px;
-    background: var(--gold); color: #1a1300;
-    font-family: var(--font-mono);
-    font-weight: 500;
-    font-size: 13px;
-    padding: 9px 16px;
-    border-radius: var(--radius-pill);
-    transform: rotate(-6deg);
-    white-space: nowrap;
-    box-shadow: var(--shadow-gold);
-    z-index: 1;
-  }
 
   /* ---------- Section shell ---------- */
   section { padding: 76px 0; }
@@ -373,6 +360,43 @@
   .final-cta .cta-row { justify-content: center; }
   .final-cta .note { margin-top: 16px; font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-muted); }
 
+  /* ---------- Price promo (the only price shown on the page) ---------- */
+  .price-promo {
+    display: inline-flex; flex-direction: column; align-items: center; gap: 2px;
+    background: var(--gold);
+    color: #1a1300;
+    padding: 22px 44px 18px;
+    border-radius: var(--radius-cards);
+    margin: 0 auto 32px;
+    position: relative;
+    box-shadow: var(--shadow-gold);
+    animation: price-pulse 2.6s ease-in-out infinite;
+  }
+  .price-promo-badge {
+    font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase;
+    background: #1a1300; color: var(--gold-soft);
+    padding: 6px 14px; border-radius: var(--radius-pill);
+    position: absolute; top: -15px; left: 50%; transform: translateX(-50%) rotate(-2deg);
+    white-space: nowrap;
+  }
+  .price-promo-value {
+    font-family: var(--font-display); font-weight: 700; font-size: 46px; line-height: 1;
+    margin-top: 10px;
+    font-variant-numeric: tabular-nums;
+  }
+  .price-promo-note {
+    font-family: var(--font-mono); font-size: 10.5px; letter-spacing: 0.06em; text-transform: uppercase;
+    color: rgba(26,19,0,0.6);
+    margin-top: 4px;
+  }
+  @keyframes price-pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.035); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .price-promo { animation: none; }
+  }
+
   /* ---------- Footer ---------- */
   footer { padding: 36px 0 calc(36px + env(safe-area-inset-bottom, 0px)); text-align: center; border-top: 1px solid rgba(255,255,255,0.08); }
   footer .mono-label { color: var(--text-muted); }
@@ -435,7 +459,7 @@
 <nav class="top">
   <div class="container">
     <span class="wordmark">FEIJOADA DA LI <span>· GUIA 99FOOD</span></span>
-    <a href="https://pay.hotmart.com/I107341440K?checkoutMode=10" class="btn btn-nav" target="_blank" rel="noopener">Comprar — R$ 19,90</a>
+    <a href="https://pay.hotmart.com/I107341440K?checkoutMode=10" class="btn btn-nav" target="_blank" rel="noopener">Comprar o guia</a>
   </div>
 </nav>
 
@@ -447,7 +471,7 @@
       <p class="subhead" data-reveal="left">O passo a passo pra calcular seu preço certo, montar combos e usar desconto sem furar o lucro — testado no delivery de verdade da Feijoada da Li, pedido a pedido.</p>
       <div class="cta-row">
         <a href="https://pay.hotmart.com/I107341440K?checkoutMode=10" class="btn btn-primary" target="_blank" rel="noopener" data-reveal="pop">
-          Quero o guia — R$ 19,90
+          Quero o guia
           <svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
         </a>
       </div>
@@ -462,7 +486,6 @@
 
     <div class="cover-wrap">
       <div class="cover" data-reveal="right">
-        <span class="price-tag">R$ 19,90</span>
         <img src="images/capa-guia.jpg" alt="Capa do Guia Definitivo para Donos de Restaurantes: Precifique no 99Food com Sucesso" width="700" height="1050" loading="eager">
       </div>
     </div>
@@ -609,10 +632,17 @@
   <div class="container">
     <span class="pill" data-reveal="down">Pagamento único · Entrega automática</span>
     <h2 class="display" style="margin-top:26px;" data-reveal="scale">Garanta o guia e <em>precifique certo</em> ainda hoje</h2>
-    <p class="subhead" data-reveal="up">R$ 19,90 · PDF liberado assim que o pagamento é confirmado.</p>
+    <p class="subhead" data-reveal="up">PDF liberado assim que o pagamento é confirmado.</p>
+
+    <div class="price-promo" data-reveal="scale">
+      <span class="price-promo-badge">Oferta de lançamento</span>
+      <div class="price-promo-value">R$ 19,90</div>
+      <div class="price-promo-note">pagamento único · acesso imediato</div>
+    </div>
+
     <div class="cta-row">
       <a href="https://pay.hotmart.com/I107341440K?checkoutMode=10" class="btn btn-primary" target="_blank" rel="noopener" data-reveal="pop">
-        Quero o guia — R$ 19,90
+        Garantir meu acesso agora
         <svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
       </a>
     </div>
@@ -627,7 +657,7 @@
 </footer>
 
 <div class="sticky-cta">
-  <a href="https://pay.hotmart.com/I107341440K?checkoutMode=10" class="btn btn-primary" target="_blank" rel="noopener">Quero o guia — R$ 19,90</a>
+  <a href="https://pay.hotmart.com/I107341440K?checkoutMode=10" class="btn btn-primary" target="_blank" rel="noopener">Quero o guia</a>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
